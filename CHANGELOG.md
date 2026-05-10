@@ -11,10 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `renderProseText` in `runtime/render/blocks.js`: triple-backtick code fences inside `prose` are now rendered as `<pre><code class="language-...">`. Other Markdown syntax (bold, links, tables) remains plain text by design (Simplicity First; no `marked` dependency added).
 - SKILL.md gains "Code blocks inside `prose` (v0.3.1+)" and "Markdown round-trip workflow (v0.3.1+)" sections, documenting the LLM-mediated MD→TOON-patch flow recommended for team review.
 - 8 new tests in `plugin/test/prose.test.mjs` covering plain prose, escape, fence with/without lang, multiple fences, and bold-as-plain-text behavior.
+- `plugin/skills/spechtml/scripts/md-diff-helper.mjs`: ships an LCS-based MD-diff extractor that emits each changed line plus its 3-line context as JSON. Distributed inside the plugin so the LLM can call it via `${CLAUDE_SKILL_DIR}/scripts/md-diff-helper.mjs` during a Markdown round-trip.
+- `plugin/skills/spechtml/examples/md-roundtrip/`: a verified golden sample of the round-trip (TOON → MD → MD-edit → LLM-generated TOON patch → apply → re-render produces a byte-identical MD, `diff` exit code 0).
+- SKILL.md gains "Markdown round-trip — strict procedure (v0.3.2+)": fixed trigger phrases, 5 numbered steps, failure branches, and a reproducibility guarantee anchored on the golden sample.
+- SKILL.md `allowed-tools` extended to permit `Bash(node */scripts/md-diff-helper.mjs *)`.
 
 ### Notes
 - TOON SPEC v3 has no YAML-style block scalar; `prose` must be written as a `\n`-escaped quoted string. spechtml's Core Rule keeps TOON in the LLM's lane, so this is not a human-facing UX issue.
 - Token-efficiency note: prose-fence vs. existing snippets block — prose-fence is ~57% (3-line code) to ~67% (10-line code) of snippets' tokens because the snippets header is heavier.
+- Round-trip note: prose-text edits are lossless (verified). Structural edits (row add/remove, new section) require the LLM to choose the correct patch op (`insert`, `add_section`, `remove`); the strict procedure surfaces these branches explicitly.
 
 ## [0.3.1] - 2026-05-11
 

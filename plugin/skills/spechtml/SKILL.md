@@ -10,6 +10,7 @@ allowed-tools:
   - Bash(node */runtime/dist/cli-md.bundle.js *)
   - Bash(node */runtime/dist/apply-toon-patch.bundle.js *)
   - Bash(node */runtime/dist/validate-toon.bundle.js *)
+  - Bash(node */scripts/md-diff-helper.mjs *)
 ---
 
 # spechtml
@@ -263,6 +264,63 @@ When team members want to edit the document via the Markdown view:
 7. Re-render to confirm the round-trip is consistent
 
 Do **not** machine-reverse Markdown to TOON: spechtml-v1 metadata (reqs ids, decisions scores, relations) does not survive a generic md→toon parse. The LLM-mediated patch path is the safe one.
+
+## Markdown round-trip — strict procedure (v0.3.2+)
+
+When the human says any of the trigger phrases below, the LLM **must** follow the 5 numbered steps in order. Do not improvise the procedure. A verified golden sample lives at `plugin/skills/spechtml/examples/md-roundtrip/`.
+
+### Trigger phrases
+
+- "Markdown を反映"
+- "MD diff を反映"
+- "レビュー後 MD を TOON に戻す"
+- "apply this Markdown diff to <toon-file>"
+
+### Step-by-step procedure
+
+1. **Extract the diff with the helper**:
+   ```bash
+   node ${CLAUDE_SKILL_DIR}/scripts/md-diff-helper.mjs <before.md> <after.md>
+   ```
+   The output is JSON: `{ changes: [{ kind, before_line, after_line, context_before, before, after, context_after }, ...] }`. Use `context_before` / `context_after` to map each change to a TOON section / block.
+
+2. **Map each change to a TOON path**:
+   - prose-style change (changed line is part of a paragraph) → `replace` `/section/prose`
+   - new prose paragraph → still `replace` `/section/prose` (re-emit the whole prose string)
+   - structured-block row added → `append` or `insert` on `/section/<block>`
+   - structured-block row removed → `remove` on `/section/<block>/id=...`
+   - new section appeared in MD → `add_section`
+   - section removed in MD → `remove` `/<section_key>`
+   If `context_before` / `context_after` do not uniquely identify a path, **ask the human for clarification** rather than guessing.
+
+3. **Compute `target_hash`** from the current TOON source:
+   ```bash
+   node -e "import('node:crypto').then(c => import('node:fs').then(f => process.stdout.write('sha256:' + c.createHash('sha256').update(f.readFileSync('<source.toon>')).digest('hex'))))"
+   ```
+
+4. **Write the patch.toon** with all required `meta` fields and the chosen ops, then **apply**:
+   ```bash
+   node ${CLAUDE_SKILL_DIR}/runtime/dist/apply-toon-patch.bundle.js <source.toon> <patch.toon>
+   ```
+   If the applier rejects with `Path segment does not exist`, look at the `Did you mean` hint and retry with the corrected path.
+
+5. **Verify the round-trip**:
+   ```bash
+   node ${CLAUDE_SKILL_DIR}/runtime/dist/cli-md.bundle.js <source.toon> <re-rendered.md>
+   diff <after.md> <re-rendered.md>
+   ```
+   Exit code 0 means the round-trip is lossless. Non-zero means structural / formatting differences exist; ask the human whether to accept or refine.
+
+### Failure branches
+
+- **Path does not exist**: do not invent. Ask the human to point at the visible id or section.
+- **Multiple changes that overlap a single prose**: collapse into one `replace` op on the whole `/section/prose`.
+- **Diff includes formatting-only changes** (e.g. table column reorder): clarify with the human; this often means a structural patch (`replace` of the entire block) rather than per-row ops.
+- **`target_hash` mismatch**: the source has changed since the MD was generated. Refuse the patch, regenerate the MD, ask the team member to re-edit.
+
+### Reproducibility guarantee
+
+If the procedure above is followed exactly, a verified-clean round-trip (e.g. `plugin/skills/spechtml/examples/md-roundtrip/`) yields a `diff` of zero lines. Any deviation indicates either an LLM judgement error or a structural change that the procedure deliberately surfaces to the human.
 
 ## Common Pitfalls
 

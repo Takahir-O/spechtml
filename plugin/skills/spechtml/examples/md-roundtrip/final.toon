@@ -1,0 +1,8 @@
+doc:
+  title: prose 内 code fence デモ
+  kind: test
+  lang: ja
+order[1|]: main
+main:
+  title: 動作確認
+  prose: "実装の概要は以下のとおり。\n\n```python\ndef hello():\n    print('hi')\n    return 0\n```\n\n複数 fence もいける。\n\n```javascript\nconst x = 1;\n```\n\nbold 記法 **これは plain text のまま** が出力される。"

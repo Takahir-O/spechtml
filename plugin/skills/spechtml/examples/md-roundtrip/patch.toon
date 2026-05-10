@@ -1,0 +1,8 @@
+meta:
+  pf: spechtml-patch-v1
+  v: 1
+  target: dev/verification/.tmp/prose-fence-demo.toon
+  target_hash: sha256:cad47d458b70480d24d27dda82581c7b5d063a27eace237b96a9e40e092c0b09
+
+replace[1|]{path|value}:
+  /main/prose|"実装の概要は以下のとおり。\n\n```python\ndef hello():\n    print('hi')\n    return 0\n```\n\n複数 fence もいける。\n\n```javascript\nconst x = 1;\n```\n\nbold 記法 **これは plain text のまま** が出力される。"

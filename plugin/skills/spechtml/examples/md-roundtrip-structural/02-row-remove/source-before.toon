@@ -1,0 +1,12 @@
+doc:
+  title: 要件サンプル
+  kind: spec
+  lang: ja
+order[1]: main
+
+main:
+  title: 要件
+  reqs[3|]{id|p|s|t|d}:
+    R1|M|A|起動|アプリ起動時にスプラッシュ画面を表示
+    R2|S|A|終了|終了時に確認ダイアログを表示
+    R3|C|A|テーマ|ライト/ダークの切替

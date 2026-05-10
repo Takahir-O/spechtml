@@ -1,0 +1,8 @@
+meta:
+  pf: spechtml-patch-v1
+  v: 1
+  target: plugin/skills/spechtml/examples/md-roundtrip-structural/02-row-remove/source-after.toon
+  target_hash: sha256:1624c8361b03c949dd842676b5de31c0a837d45cc24e23333c3baabf5697fbf8
+
+remove[1|]{path}:
+  /main/reqs/id=R2

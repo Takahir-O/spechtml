@@ -1,0 +1,9 @@
+doc:
+  title: アプリ仕様
+  kind: spec
+  lang: ja
+order[1]: main
+
+main:
+  title: 概要
+  prose: シンプルなメモ帳アプリ。テキスト編集と保存ができる。

@@ -1,0 +1,14 @@
+meta:
+  pf: spechtml-patch-v1
+  v: 1
+  target: plugin/skills/spechtml/examples/md-roundtrip-structural/03-section-add/source-after.toon
+  target_hash: sha256:5c34a2b18b0ecb616d0da7d3230c1ff90f80edfa3c301ed7c6f6956de605df19
+
+add_section[1]:
+  - key: limits
+    index: 1
+    body:
+      title: 制約
+      reqs[2|]{id|p|s|t|d}:
+        L1|M|A|サイズ|1 ファイル 10MB まで
+        L2|S|A|形式|プレーンテキストのみ対応

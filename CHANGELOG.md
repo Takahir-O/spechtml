@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 8 new tests in `plugin/test/prose.test.mjs` covering plain prose, escape, fence with/without lang, multiple fences, and bold-as-plain-text behavior.
 - `plugin/skills/spechtml/scripts/md-diff-helper.mjs`: ships an LCS-based MD-diff extractor that emits each changed line plus its 3-line context as JSON. Distributed inside the plugin so the LLM can call it via `${CLAUDE_SKILL_DIR}/scripts/md-diff-helper.mjs` during a Markdown round-trip.
 - `plugin/skills/spechtml/examples/md-roundtrip/`: a verified golden sample of the round-trip (TOON → MD → MD-edit → LLM-generated TOON patch → apply → re-render produces a byte-identical MD, `diff` exit code 0).
-- SKILL.md gains "Markdown round-trip — strict procedure (v0.3.2+)": fixed trigger phrases, 5 numbered steps, failure branches, and a reproducibility guarantee anchored on the golden sample.
+- `plugin/skills/spechtml/examples/md-roundtrip-structural/`: three additional verified golden samples covering structural edits — `01-row-add` (`append`), `02-row-remove` (`remove`), `03-section-add` (`add_section`). Each scenario ends with `diff` exit 0.
+- SKILL.md gains "Markdown round-trip — strict procedure (v0.3.2+)": fixed trigger phrases, 5 numbered steps, failure branches, and a reproducibility guarantee anchored on the golden samples.
 - SKILL.md `allowed-tools` extended to permit `Bash(node */scripts/md-diff-helper.mjs *)`.
 
 ### Notes

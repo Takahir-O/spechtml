@@ -1,0 +1,8 @@
+meta:
+  pf: spechtml-patch-v1
+  v: 1
+  target: plugin/skills/spechtml/examples/md-roundtrip-structural/01-row-add/source-after.toon
+  target_hash: sha256:b156b53220a623680f43bcb6706fe210712e3c290086f0dbf750760157487284
+
+append[1|]{path|id|p|s|t|d}:
+  /main/reqs|R3|M|A|自動保存|30秒ごとにバックグラウンドで保存

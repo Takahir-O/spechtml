@@ -320,7 +320,14 @@ When the human says any of the trigger phrases below, the LLM **must** follow th
 
 ### Reproducibility guarantee
 
-If the procedure above is followed exactly, a verified-clean round-trip (e.g. `plugin/skills/spechtml/examples/md-roundtrip/`) yields a `diff` of zero lines. Any deviation indicates either an LLM judgement error or a structural change that the procedure deliberately surfaces to the human.
+If the procedure above is followed exactly, a verified-clean round-trip yields a `diff` of zero lines. Four golden samples ship with the plugin:
+
+- `examples/md-roundtrip/` — prose-text edit (`replace` on `/section/prose`)
+- `examples/md-roundtrip-structural/01-row-add/` — table row added (`append`)
+- `examples/md-roundtrip-structural/02-row-remove/` — table row removed (`remove`)
+- `examples/md-roundtrip-structural/03-section-add/` — top-level section added (`add_section`)
+
+Any deviation from `diff` exit 0 indicates either an LLM judgement error or a structural change that the procedure deliberately surfaces to the human.
 
 ## Common Pitfalls
 

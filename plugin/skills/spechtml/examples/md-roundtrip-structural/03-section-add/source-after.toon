@@ -1,0 +1,13 @@
+doc:
+  title: アプリ仕様
+  kind: spec
+  lang: ja
+order[2|]: main|limits
+main:
+  title: 概要
+  prose: シンプルなメモ帳アプリ。テキスト編集と保存ができる。
+limits:
+  title: 制約
+  reqs[2|]{id|p|s|t|d}:
+    L1|M|A|サイズ|1 ファイル 10MB まで
+    L2|S|A|形式|プレーンテキストのみ対応

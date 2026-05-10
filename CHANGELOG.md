@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-05-11
+
+### Added
+- `insert` patch op: insert a row into an array at a given index (clamped to `[0, length]`). Solves the "append-only" limitation observed in postmortem-style timelines where order matters.
+- `add_section` patch op: add a brand-new top-level section and place its key into `order` in a single operation. Eliminates the need to re-emit the entire TOON document when adding chapters.
+- `validate-toon` now returns `line_content` and `diagnosis` for tabular row-count mismatches, with explicit hints (e.g., "値内に `|` が N 個多く含まれているように見えます") to shorten retry loops on syntax errors.
+- `apply-toon-patch` path resolver now suggests a similar key (`Did you mean "..."?`) or lists available keys when a path segment does not exist.
+- `dev/verification/scripts/diff-stats.mjs` switched from multiset approximation to LCS-based diff for accurate order-aware churn measurement.
+- `dev/verification/scripts/measure-tokens.mjs` learned a `--cached <N>` option that estimates billed tokens under Anthropic prompt caching (90% off on cached input).
+- Documentation: `references/patch-format.md`, `SKILL.md`, and `format-prompts/spechtml-edit.md` updated to reflect the new operations.
+
+### Notes
+- Versioned as a PATCH bump (0.3.0 → 0.3.1) per repository policy. Strictly under semver this would be a MINOR bump (new patch ops added).
+
+### Future (not in this release)
+- Stable-mode for `apply-toon-patch` that minimizes incidental re-serialization diff (LIM4 in the verification report). Requires changes to upstream `@toon-format/toon` encode options or a custom serializer.
+
 ## [0.3.0] - 2026-05-10
 
 Initial public release.

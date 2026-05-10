@@ -137,11 +137,12 @@ node ${CLAUDE_SKILL_DIR}/runtime/dist/cli.bundle.js docs/spec.compact.toon dist/
 
 | Human says | Action |
 |---|---|
-| "id10 をもっと平易に" | replace the field at id10's data-path |
-| "id10 の後に新しい項目を追加" | append to the table containing id10 |
-| "id10 を削除" | remove the row at id10's data-path |
-| "id5 の優先度を must に" | replace the priority/status field |
-| "新しいセクションを追加" | append a new section to `order` and add the section object |
+| "id10 をもっと平易に" | `replace` the field at id10's data-path |
+| "id10 の後に新しい項目を追加" | `append` to the table containing id10 |
+| "id10 と id12 の間に新しい行を入れて" | `insert` with the index between id10 and id12 (v0.4) |
+| "id10 を削除" | `remove` the row at id10's data-path |
+| "id5 の優先度を must に" | `replace` the priority/status field |
+| "新しいセクションを追加" | `add_section` with `key`, `index`, and `body` (v0.4) |
 
 For any edit, always: write patch → apply in-place → re-render → notify human.
 

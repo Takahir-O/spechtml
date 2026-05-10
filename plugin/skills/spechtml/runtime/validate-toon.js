@@ -27,12 +27,18 @@ try {
   try {
     doc = decode(source, { strict: true });
   } catch (e) {
-    console.log(JSON.stringify({
+    const result = {
       ok: false,
       phase: 'decode',
       error: e.message,
       suggestion: 'Check TOON syntax: indentation, array sizes, delimiter consistency'
-    }));
+    };
+    const hint = diagnoseDecodeError(e.message, source);
+    if (hint) {
+      result.line_content = hint.line_content;
+      result.diagnosis = hint.diagnosis;
+    }
+    console.log(JSON.stringify(result));
     process.exit(1);
   }
 
@@ -63,4 +69,25 @@ try {
     error: e.message ?? String(e)
   }));
   process.exit(1);
+}
+
+function diagnoseDecodeError(message, source) {
+  const m = message.match(/^Line (\d+): Expected (\d+) tabular row values, but got (\d+)/);
+  if (!m) return null;
+  const lineNum = parseInt(m[1], 10);
+  const expected = parseInt(m[2], 10);
+  const got = parseInt(m[3], 10);
+  const lines = source.split(/\r?\n/);
+  const lineContent = lines[lineNum - 1] ?? '';
+  const diagnosis = [];
+  if (got > expected) {
+    const extra = got - expected;
+    diagnosis.push(`値内に \`|\` が ${extra} 個多く含まれているように見えます`);
+    diagnosis.push('対処案: 値内の縦棒を `/` か言葉に置換するか、値全体を `"` で quote してください');
+  } else if (got < expected) {
+    const missing = expected - got;
+    diagnosis.push(`値が ${missing} 個不足しています`);
+    diagnosis.push('対処案: 空フィールドは空文字列として明示し、列数を保ってください');
+  }
+  return { line_content: lineContent, diagnosis };
 }

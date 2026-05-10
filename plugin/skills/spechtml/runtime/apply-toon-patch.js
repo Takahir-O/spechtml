@@ -91,9 +91,19 @@ export function applyPatch(doc, patch) {
     replaceAtPath(snapshot, row.path, row.value);
   }
 
+  for (const row of arrayOf(patch.insert)) {
+    const { path, index, ...value } = row;
+    insertAtPath(snapshot, path, index, stripEmpty(value));
+  }
+
   for (const row of arrayOf(patch.append)) {
     const { path, ...value } = row;
     appendAtPath(snapshot, path, stripEmpty(value));
+  }
+
+  for (const row of arrayOf(patch.add_section)) {
+    const { key, index, body } = row;
+    addSectionAtRoot(snapshot, key, index, body);
   }
 
   for (const row of arrayOf(patch.remove)) {
@@ -122,6 +132,45 @@ function appendAtPath(root, path, value) {
     throw new Error(`Append target is not an array: ${path}`);
   }
   target.push(value);
+}
+
+function insertAtPath(root, path, index, value) {
+  const target = resolvePath(root, path);
+  if (!Array.isArray(target)) {
+    throw new Error(`Insert target is not an array: ${path}`);
+  }
+  const i = Number(index);
+  if (!Number.isInteger(i) || i < 0) {
+    throw new Error(`Insert index must be a non-negative integer: ${index}`);
+  }
+  const clamped = Math.min(i, target.length);
+  target.splice(clamped, 0, value);
+}
+
+function addSectionAtRoot(root, key, index, body) {
+  if (!key || typeof key !== 'string') {
+    throw new Error('add_section requires a string `key`');
+  }
+  if (FORBIDDEN_KEYS.has(key)) {
+    throw new Error(`Forbidden section key: ${key}`);
+  }
+  if (Object.hasOwn(root, key)) {
+    throw new Error(`Section already exists: ${key}`);
+  }
+  if (!Array.isArray(root.order)) {
+    throw new Error('add_section requires a top-level `order` array');
+  }
+  if (!body || typeof body !== 'object') {
+    throw new Error('add_section requires an object `body`');
+  }
+  root[key] = body;
+  const i = Number(index);
+  if (!Number.isInteger(i) || i < 0) {
+    root.order.push(key);
+  } else {
+    const clamped = Math.min(i, root.order.length);
+    root.order.splice(clamped, 0, key);
+  }
 }
 
 function removeAtPath(root, path) {
@@ -168,7 +217,17 @@ function resolvePath(root, path, options = {}) {
     }
 
     if (!Object.hasOwn(current, part)) {
-      throw new Error(`Path segment does not exist: ${part} in ${path}`);
+      const keys = Object.keys(current);
+      const suggestion = suggestKey(part, keys);
+      let hint = '';
+      if (suggestion) {
+        hint = ` (Did you mean "${suggestion}"?)`;
+      } else if (keys.length > 0) {
+        const preview = keys.slice(0, 5).join(', ');
+        const more = keys.length > 5 ? `, ...` : '';
+        hint = ` Available keys: ${preview}${more}`;
+      }
+      throw new Error(`Path segment does not exist: ${part} in ${path}${hint}`);
     }
 
     current = current[part];
@@ -200,6 +259,20 @@ function matchArrayPart(array, part) {
 
 function stripEmpty(value) {
   return Object.fromEntries(Object.entries(value).filter(([, v]) => v !== ''));
+}
+
+function suggestKey(actual, candidates) {
+  if (!candidates.length) return null;
+  const lower = actual.toLowerCase();
+  const exactCi = candidates.find(k => k.toLowerCase() === lower);
+  if (exactCi) return exactCi;
+  const startsLike = candidates.find(k => {
+    const kl = k.toLowerCase();
+    return kl.startsWith(lower) || lower.startsWith(kl);
+  });
+  if (startsLike) return startsLike;
+  const containsLike = candidates.find(k => k.toLowerCase().includes(lower) || lower.includes(k.toLowerCase()));
+  return containsLike ?? null;
 }
 
 function arrayOf(value) {

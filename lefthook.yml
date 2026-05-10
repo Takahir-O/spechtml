@@ -1,0 +1,9 @@
+pre-push:
+  parallel: true
+  commands:
+    audit-root:
+      run: npm audit --omit=dev --audit-level=moderate
+    test-root:
+      run: npm test
+    build-verify:
+      run: npm run build

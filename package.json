@@ -1,0 +1,42 @@
+{
+  "name": "spechtml-dev",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Development workspace for the spechtml Claude Code plugin (TOON to HTML/Markdown document loop).",
+  "author": {
+    "name": "Takahir-O"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Takahir-O/spechtml.git"
+  },
+  "homepage": "https://github.com/Takahir-O/spechtml",
+  "bugs": {
+    "url": "https://github.com/Takahir-O/spechtml/issues"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "prepare": "lefthook install || true",
+    "build": "node build.mjs",
+    "test": "node --test plugin/test/escape.test.mjs plugin/test/markdown.test.mjs plugin/test/normalize.test.mjs plugin/test/patch.test.mjs plugin/test/safe-path.test.mjs plugin/test/schema.test.mjs",
+    "render": "npm run render:spec-ja",
+    "render:spec-ja": "node plugin/skills/spechtml/runtime/cli.js dev/examples/spec-ja.toon dev/dist/spec-ja.html",
+    "render:compact": "node plugin/skills/spechtml/runtime/cli.js dev/examples/spec-ja.compact.toon dev/dist/spec-ja-compact.html",
+    "compare": "node dev/scripts/compare-formats.js",
+    "audit:root": "npm audit --omit=dev --audit-level=moderate"
+  },
+  "dependencies": {
+    "@toon-format/toon": "2.2.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.0",
+    "gpt-tokenizer": "3.4.0",
+    "lefthook": "2.1.6"
+  }
+}

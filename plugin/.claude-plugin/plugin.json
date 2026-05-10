@@ -1,0 +1,12 @@
+{
+  "name": "spechtml",
+  "version": "0.3.0",
+  "description": "Write lightweight Compact TOON, get beautiful HTML/Markdown. Human-LLM document loop with visible id-based editing and atomic TOON patches.",
+  "author": {
+    "name": "Takahir-O"
+  },
+  "homepage": "https://github.com/Takahir-O/spechtml",
+  "repository": "https://github.com/Takahir-O/spechtml",
+  "license": "MIT",
+  "keywords": ["documentation", "toon", "html", "markdown", "llm", "patch"]
+}

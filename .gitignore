@@ -1,0 +1,11 @@
+node_modules/
+
+# dev/ is local-only: development workspace, personal docs, generated artifacts.
+# Not shipped to users (plugin/ is the distributable).
+dev/
+
+# Local Claude Code settings — may contain absolute paths and machine-local permissions.
+.claude/
+
+*.log
+temp-*

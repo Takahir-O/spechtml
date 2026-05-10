@@ -223,6 +223,7 @@ Use:
 - `note` for short prose, background, summaries
 - `components`, `reqs`, `decisions`, `steps` for structured content
 - `notes` for code explanations
+- `prose` for narrative + inline code fences (v0.3.1+)
 - File reference (`file` + `lines`) for long code instead of embedding full code
 
 For long code, prefer a file reference:
@@ -232,7 +233,36 @@ notes[1|]{file|line|concept|note}:
   src/main.rs|42-58|handler|async fn handler(...) -> impl IntoResponse
 ```
 
-Over embedding a full code block in TOON.
+### Code blocks inside `prose` (v0.3.1+)
+
+`prose` accepts triple-backtick fences. The HTML renderer turns them into `<pre><code class="language-...">`. Other Markdown syntax (bold, links, tables) is left as plain text.
+
+Write `prose` as a `\n`-escaped quoted string (TOON SPEC v3 has no YAML-style block scalar). Example:
+
+```toon
+prose: "実装はこんな感じ。\n\n```python\ndef hello():\n    print('hi')\n```\n\n以上。"
+```
+
+Render outputs:
+
+- HTML: `<p>実装はこんな感じ。</p><pre><code class="language-python">def hello():\n    print('hi')</code></pre><p>以上。</p>`
+- Markdown: the fence is passed through as a Markdown code fence
+
+Use `prose + fence` for "narrative with code". Use `snippets` for "standalone code references" (the `path` / `lines` / `lang` metadata is preserved as a Copy-able block).
+
+## Markdown round-trip workflow (v0.3.1+)
+
+When team members want to edit the document via the Markdown view:
+
+1. Generate `spec.md` from `spec.compact.toon` with `cli-md.bundle.js`
+2. Commit `spec.md` to the repo, share with team
+3. Reviewer edits `spec.md` directly and commits the diff
+4. Owner asks the LLM: "apply this Markdown diff to `spec.compact.toon`"
+5. LLM produces a TOON patch (replace / append / insert / remove / add_section) targeting the right `path`
+6. `apply-toon-patch.bundle.js` applies the patch in place; `target_hash` rejects stale patches
+7. Re-render to confirm the round-trip is consistent
+
+Do **not** machine-reverse Markdown to TOON: spechtml-v1 metadata (reqs ids, decisions scores, relations) does not survive a generic md→toon parse. The LLM-mediated patch path is the safe one.
 
 ## Common Pitfalls
 

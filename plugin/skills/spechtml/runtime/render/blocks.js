@@ -295,8 +295,33 @@ function renderProse(prose, sectionId) {
   const items = arrayOf(prose).filter((item) => item.section === sectionId);
   if (!items.length) return '<p>No prose.</p>';
   return `<div class="prose">
-    ${items.map((item) => `<p>${escapeHtml(item.text ?? '')}</p>`).join('\n    ')}
+    ${items.map((item) => renderProseText(item.text ?? '')).join('\n    ')}
   </div>`;
+}
+
+export function renderProseText(text) {
+  const fenceRe = /^```([A-Za-z0-9_+-]*)\n([\s\S]*?)\n```$/gm;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = fenceRe.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      const before = text.slice(lastIndex, match.index).replace(/^\n+|\n+$/g, '');
+      if (before) parts.push(`<p>${escapeHtml(before)}</p>`);
+    }
+    const lang = match[1] || 'text';
+    const code = match[2];
+    parts.push(`<pre><code class="language-${escapeAttr(lang)}">${escapeHtml(code)}</code></pre>`);
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    const after = text.slice(lastIndex).replace(/^\n+|\n+$/g, '');
+    if (after) parts.push(`<p>${escapeHtml(after)}</p>`);
+  }
+  if (parts.length === 0) {
+    return `<p>${escapeHtml(text)}</p>`;
+  }
+  return parts.join('\n    ');
 }
 
 function renderSnippets(snippets, sectionId) {

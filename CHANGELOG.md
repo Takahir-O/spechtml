@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2026-05-11
+
+### Added
+- `renderProseText` in `runtime/render/blocks.js`: triple-backtick code fences inside `prose` are now rendered as `<pre><code class="language-...">`. Other Markdown syntax (bold, links, tables) remains plain text by design (Simplicity First; no `marked` dependency added).
+- SKILL.md gains "Code blocks inside `prose` (v0.3.1+)" and "Markdown round-trip workflow (v0.3.1+)" sections, documenting the LLM-mediated MD→TOON-patch flow recommended for team review.
+- 8 new tests in `plugin/test/prose.test.mjs` covering plain prose, escape, fence with/without lang, multiple fences, and bold-as-plain-text behavior.
+
+### Notes
+- TOON SPEC v3 has no YAML-style block scalar; `prose` must be written as a `\n`-escaped quoted string. spechtml's Core Rule keeps TOON in the LLM's lane, so this is not a human-facing UX issue.
+- Token-efficiency note: prose-fence vs. existing snippets block — prose-fence is ~57% (3-line code) to ~67% (10-line code) of snippets' tokens because the snippets header is heavier.
+
 ## [0.3.1] - 2026-05-11
 
 ### Added

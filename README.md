@@ -36,7 +36,7 @@ Compact TOON  ──► HTML       (cli.bundle.js)
 
 Measured under `dev/verification/` against three real-world document genres (REST API spec, product PRD, incident postmortem). Each case ran six operations (`v0` brief + five edits `E1..E5`) on two routes (LLM-direct HTML vs. spechtml).
 
-| Metric | LLM-direct HTML | spechtml v0.3.2 |
+| Metric | LLM-direct HTML | spechtml v0.3.3 |
 |---|---|---|
 | Cumulative tokens (api-spec, 6 ops) | 17,886 | **8,322** (46.5 %) |
 | Cumulative tokens (prd, 6 ops) | 19,842 | **8,722** (43.9 %) |
@@ -134,7 +134,15 @@ Each directory contains the before / after / patch / re-rendered files plus a `R
 
 ## What's new
 
-### v0.3.2 (current)
+### v0.3.3 (current)
+
+- HTML output adopts a note-inspired light theme (color, typography, spacing) per [awesome-design-md-jp / design-md/note](https://github.com/kzhrknt/awesome-design-md-jp/tree/main/design-md/note). Body type is `18px / line-height 2.0`; headings carry `letter-spacing: 0.04em` + `font-feature-settings: "palt"`; body keeps `letter-spacing: normal` per note's Don'ts
+- `runtime/render/document.js` injects Google Fonts (`Noto Sans JP`, `Open Sans`) so Windows reproduces the note rendering instead of falling back to Meiryo
+- New design tokens: `--brand` (note green `#5ac8b8`), `--serif`, `--elevation-1/4/6` (dual-shadow), `--main-w 940px`, `--article-w 620px`. Article-flow widths constrained to 620px; cards use `--elevation-1` with a 12px radius
+- Mermaid `themeVariables` aligned to note tokens (`primaryTextColor` / `primaryBorderColor: #08131a`, `lineColor: #5a656b`)
+- No changes to TOON input schema, patch ops, or CLI surface; Markdown output is unchanged
+
+### v0.3.2
 
 - `renderProseText`: triple-backtick fences inside `prose` render as `<pre><code>` (HTML) and pass through Markdown unchanged
 - `md-diff-helper.mjs`: LCS-based MD-diff extractor for the round-trip workflow (callable as `${CLAUDE_SKILL_DIR}/scripts/md-diff-helper.mjs`)

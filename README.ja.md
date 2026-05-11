@@ -36,7 +36,7 @@ Compact TOON  ──► HTML       (cli.bundle.js)
 
 `dev/verification/` 配下で、3 種類の業務文書(REST API 仕様、製品 PRD、障害ポストモーテム)に対して計測。各ケースで 6 操作(`v0` 土台 + 5 編集 `E1..E5`)を 2 ルート(LLM 直接 HTML vs spechtml)で実行。
 
-| 指標 | LLM 直接 HTML | spechtml v0.3.2 |
+| 指標 | LLM 直接 HTML | spechtml v0.3.3 |
 |---|---|---|
 | 累計トークン(api-spec、6 op) | 17,886 | **8,322**(46.5 %) |
 | 累計トークン(prd、6 op) | 19,842 | **8,722**(43.9 %) |
@@ -134,7 +134,15 @@ graph LR
 
 ## 更新履歴(主要点)
 
-### v0.3.2(現在)
+### v0.3.3(現在)
+
+- HTML 出力を note 風ライトテーマに刷新([awesome-design-md-jp / design-md/note](https://github.com/kzhrknt/awesome-design-md-jp/tree/main/design-md/note) 準拠)。本文 `18px / line-height 2.0`、見出しに `letter-spacing: 0.04em` + `font-feature-settings: "palt"`、本文側は `letter-spacing: normal` で note の Don't を順守
+- `runtime/render/document.js` で Google Fonts(`Noto Sans JP` / `Open Sans`)を読み込み。Windows でも Meiryo に落ちず note 本家と同じレンダリングに揃う
+- 追加トークン: `--brand`(note green `#5ac8b8`)、`--serif`、`--elevation-1/4/6`(ambient + key の dual shadow)、`--main-w 940px`、`--article-w 620px`。本文流の幅は 620px、main は 940px、card は `--elevation-1` + radius 12px
+- Mermaid `themeVariables` も note トークンに整列(`primaryTextColor` / `primaryBorderColor: #08131a`, `lineColor: #5a656b`)
+- TOON 入力スキーマ・patch op・CLI には変更なし。Markdown 出力にも影響なし
+
+### v0.3.2
 
 - `renderProseText`: prose 内 triple-backtick fence を `<pre><code>` に変換(HTML)、Markdown ではフェンスがそのまま素通し
 - `md-diff-helper.mjs`: round-trip 用の LCS ベース MD-diff 抽出器(`${CLAUDE_SKILL_DIR}/scripts/md-diff-helper.mjs` で呼べる)

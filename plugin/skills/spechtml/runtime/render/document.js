@@ -22,6 +22,9 @@ export function renderDocument(data) {
   <title>${escapeHtml(doc.title)}</title>
   ${doc.author ? `<meta name="author" content="${escapeAttr(doc.author)}">` : ''}
   ${doc.tags?.length ? `<meta name="keywords" content="${escapeAttr(doc.tags.join(', '))}">` : ''}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>${styles()}</style>
 </head>
 <body>
@@ -59,7 +62,7 @@ export function renderDocument(data) {
   </main>
 
   <script type="application/json" id="spechtml-ref-map">${safeJsonForScript(refs.items)}</script>
-  ${hasFlowcharts ? '<script src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" integrity="sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk" crossorigin="anonymous"></script><script>mermaid.initialize({startOnLoad:true,securityLevel:"strict",theme:"base",themeVariables:{fontFamily:"var(--sans)",fontSize:"18px",primaryColor:"#ffffff",primaryTextColor:"#15161b",primaryBorderColor:"#2c4ad9",lineColor:"#5a5e6a",secondaryColor:"#ecefff",tertiaryColor:"#f7f5f0"},flowchart:{nodeSpacing:50,rankSpacing:60,curve:"basis"}});</script>' : ''}
+  ${hasFlowcharts ? '<script src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" integrity="sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk" crossorigin="anonymous"></script><script>mermaid.initialize({startOnLoad:true,securityLevel:"strict",theme:"base",themeVariables:{fontFamily:"var(--sans)",fontSize:"18px",primaryColor:"#ffffff",primaryTextColor:"#08131a",primaryBorderColor:"#08131a",lineColor:"#5a656b",secondaryColor:"#f5f8fa",tertiaryColor:"#f5f8fa"},flowchart:{nodeSpacing:50,rankSpacing:60,curve:"basis"}});</script>' : ''}
   ${hasSnippets ? `<script>${codeCopyScript()}</script>` : ''}
   ${hasControls ? `<script>${controlsScript(data)}</script>` : ''}
   <script>

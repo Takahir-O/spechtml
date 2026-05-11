@@ -1,6 +1,6 @@
 {
   "name": "spechtml",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Write lightweight Compact TOON, get beautiful HTML/Markdown. Human-LLM document loop with visible id-based editing and atomic TOON patches.",
   "author": {
     "name": "Takahir-O"

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2026-05-12
+
+### Changed
+- HTML output now ships a note-inspired light theme based on the [awesome-design-md-jp DESIGN.md for note](https://github.com/kzhrknt/awesome-design-md-jp/tree/main/design-md/note). `runtime/render/styles.js` replaces the previous warm-paper palette with note's tokens: text `#08131a`, secondary `rgba(8,19,26,0.66)`, background `#ffffff` / `#f5f8fa`, focus ring `#292d9e`, semantic danger `#b22323`, success `#1e7b65`, caution `#916626`. The brand teal `#5ac8b8` is exposed as `--brand` for accent strokes only (never used for body text, per note's Don'ts).
+- Typography rebuilt to note's article spec: body `18px / line-height 2.0`, font stack `"Helvetica Neue" → "Hiragino Sans" → "Hiragino Kaku Gothic ProN" → Arial → "Noto Sans JP" → Meiryo`. Headings (`h1..h4`) receive `letter-spacing: 0.04em` + `font-feature-settings: "palt"`; body keeps `letter-spacing: normal`. Hero h1 is `32px / 700 / 1.5`, section h2 is `28px / 700 / 1.286`.
+- `runtime/render/document.js` injects Google Fonts links (`Noto Sans JP 400/500/700`, `Open Sans 400/600/700`) with `preconnect` so Windows reproduces the note rendering instead of falling back to Meiryo.
+- New CSS custom properties added: `--brand`, `--serif`, `--elevation-1/4/6` (note's dual-shadow ambient + key light), `--main-w` (940px), `--article-w` (620px). `main` is constrained to 940px and article-flow blocks (`.prose`, `.callout-text`) to 620px. All `border-radius: 10px` collapsed to `12px`. `.component-card` adopts `--elevation-1` (hover: `--elevation-4`). `:focus-visible` outline switched to `var(--accent-2)`.
+- Mermaid `themeVariables` in `runtime/render/document.js` aligned to note tokens (`primaryTextColor` / `primaryBorderColor: #08131a`, `lineColor: #5a656b`, `secondaryColor` / `tertiaryColor: #f5f8fa`).
+
+### Notes
+- No changes to TOON input schema, patch ops, or CLI surface; this is a visual refresh of the rendered HTML only. `cli-md.js` (Markdown output) is untouched.
+- Dark mode, theme switching, and per-document theme overrides are intentionally out of scope; the existing `doc.theme` metadata field continues to represent the document's subject label (badge text) and was not repurposed.
+- External dependency surface grows by the Google Fonts CDN. Offline-only rendering will exhibit the Windows fallback (Arial + Meiryo) until a local font strategy is introduced.
+
 ## [0.3.2] - 2026-05-11
 
 ### Added

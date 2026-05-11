@@ -1,43 +1,52 @@
 export function styles() {
   return `
 /* ============================================================
-   spechtml — warm-paper light theme
+   spechtml — note-inspired light theme
+   (https://github.com/kzhrknt/awesome-design-md-jp/tree/main/design-md/note)
    ============================================================ */
 :root {
   color-scheme: light;
-  --bg:        #fcfaf6;
-  --bg-soft:   #f7f5f0;
+  --bg:        #ffffff;
+  --bg-soft:   #f5f8fa;
   --panel:     #ffffff;
 
-  --ink:       #15161b;
-  --ink-2:     #4b4e57;
-  --muted:     #7a7d86;
-  --faint:     #ebe7dc;
+  --ink:       #08131a;
+  --ink-2:     rgba(8,19,26,0.66);
+  --muted:     #5a656b;
+  --faint:     rgba(8,19,26,0.14);
 
-  --rule:      #e5e1d5;
-  --rule-soft: #efeadf;
+  --rule:      rgba(8,19,26,0.14);
+  --rule-soft: #f5f8fa;
 
-  --accent:    #2c4ad9;
-  --accent-bg: #ecefff;
-  --accent-2:  #1f37a8;
+  --accent:    #08131a;
+  --accent-bg: #f5f8fa;
+  --accent-2:  #292d9e;
+  --brand:     #5ac8b8;
 
-  --c-must:    #d93b4a;   --c-must-bg:    #fdecea;
-  --c-should:  #d47e2a;   --c-should-bg:  #fbf0dc;
-  --c-could:   #158070;   --c-could-bg:   #e6f3ec;
-  --c-done:    #158070;
-  --c-next:    #d47e2a;
-  --c-blocked: #7a7d86;
+  --c-must:    #b22323;   --c-must-bg:    #fdf3f3;
+  --c-should:  #916626;   --c-should-bg:  #fefbea;
+  --c-could:   #1e7b65;   --c-could-bg:   #e6f6f2;
+  --c-done:    #1e7b65;
+  --c-next:    #916626;
+  --c-blocked: #5a656b;
 
-  --code-bg:        #15161b;
-  --code-shoulder: #1c1e25;
-  --code-fg:        #cfd2db;
-  --code-mute:      #8a8d96;
-  --code-rule:      #2a2d35;
+  --code-bg:        #08131a;
+  --code-shoulder:  #202a30;
+  --code-fg:        hsla(0,0%,100%,0.90);
+  --code-mute:      #aeb7bd;
+  --code-rule:      rgba(255,255,255,0.10);
 
-  --sans: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
-  --mono: "SF Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --elevation-1: 0px 1px 3px 1px rgba(0,0,0,0.14), 0px 1px 2px 0px rgba(0,0,0,0.22);
+  --elevation-4: 0px 4px 8px 3px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.22);
+  --elevation-6: 0px 6px 10px 4px rgba(0,0,0,0.14), 0px 2px 3px 0px rgba(0,0,0,0.22);
+
+  --sans: "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Arial, "Noto Sans JP", Meiryo, sans-serif;
+  --serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", HGSMinchoE, "Yu Mincho", YuMincho, "MS PMincho", serif;
+  --mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
 
   --section-w: 180px;
+  --main-w:    940px;
+  --article-w: 620px;
 }
 
 * { box-sizing: border-box; }
@@ -50,12 +59,28 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 15px/1.75 var(--sans);
+  font: 18px/2.0 var(--sans);
+  letter-spacing: normal;
+  font-feature-settings: normal;
+  word-wrap: break-word;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: auto;
 }
 
-::selection { background: #ffe9b8; color: var(--ink); }
+h1, h2, h3, h4 {
+  letter-spacing: 0.04em;
+  font-feature-settings: "palt";
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::selection { background: rgba(90,200,184,0.30); color: var(--ink); }
 
 h1, h2, h3, h4, p, ul, ol { margin: 0; }
 p { text-wrap: pretty; }
@@ -109,10 +134,11 @@ code {
 
 .hero h1 {
   margin-bottom: 16px;
-  font-size: clamp(32px, 4.5vw, 48px);
-  line-height: 1.2;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 32px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-feature-settings: "palt";
   color: var(--ink);
 }
 
@@ -185,7 +211,7 @@ code {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(252, 250, 246, 0.92);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px) saturate(1.4);
   -webkit-backdrop-filter: blur(12px) saturate(1.4);
   border-bottom: 1px solid var(--rule);
@@ -270,7 +296,7 @@ code {
    ============================================================ */
 main {
   padding: 24px clamp(16px, 3vw, 48px) 80px;
-  max-width: 1160px;
+  max-width: var(--main-w);
   margin: 0 auto;
   overflow-x: hidden;
 }
@@ -301,11 +327,12 @@ main {
 
 .section-head h2 {
   margin-bottom: 8px;
-  font-size: clamp(24px, 3vw, 30px);
-  line-height: 1.25;
-  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.286;
+  font-weight: 700;
   color: var(--ink);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
+  font-feature-settings: "palt";
 }
 
 .section-head .section-sub {
@@ -372,7 +399,7 @@ body.show-refs .ref-badge {
 }
 
 [id]:target {
-  background: #fff7d6;
+  background: rgba(90,200,184,0.18);
   border-radius: 6px;
 }
 
@@ -383,7 +410,7 @@ body.show-refs .ref-badge {
   min-width: 0;
   padding: 20px;
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--panel);
 }
 
@@ -429,21 +456,21 @@ body.show-refs .ref-badge {
 .callout-text {
   margin: 0;
   padding: 3px 0 3px 18px;
-  border-left: 3px solid var(--accent);
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--ink-2);
-  max-width: 68ch;
+  border-left: 3px solid var(--brand);
+  font-size: 18px;
+  line-height: 2.0;
+  color: var(--ink);
+  max-width: var(--article-w);
 }
 
 /* ============================================================
    BLOCK: prose
    ============================================================ */
 .prose {
-  max-width: 64ch;
-  font-size: 16px;
-  line-height: 1.85;
-  color: var(--ink-2);
+  max-width: var(--article-w);
+  font-size: 18px;
+  line-height: 2.0;
+  color: var(--ink);
 }
 
 .prose p + p { margin-top: 1em; }
@@ -663,11 +690,12 @@ body.show-refs .ref-badge {
   padding: 20px;
   background: var(--panel);
   border: 1px solid var(--rule);
-  border-radius: 10px;
-  transition: border-color 0.15s;
+  border-radius: 12px;
+  box-shadow: var(--elevation-1);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.component-card:hover { border-color: var(--ink-2); }
+.component-card:hover { border-color: var(--ink); box-shadow: var(--elevation-4); }
 
 .component-card .cat {
   display: inline-block;
@@ -865,7 +893,7 @@ body.show-refs .ref-badge {
 .snippet-list { display: grid; gap: 18px; }
 
 .snippet {
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--code-bg);
   border: 1px solid var(--rule);
@@ -937,7 +965,7 @@ body.show-refs .ref-badge {
   display: inline-block;
   width: 26px;
   margin-right: 16px;
-  color: #54565f;
+  color: var(--code-mute);
   text-align: right;
   user-select: none;
   font-size: 12px;
@@ -955,7 +983,7 @@ body.show-refs .ref-badge {
 /* Legacy code-block-wrapper support */
 .code-block-wrapper {
   position: relative;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--code-bg);
   border: 1px solid var(--rule);
@@ -983,7 +1011,7 @@ body.show-refs .ref-badge {
   width: 34px;
   margin-left: -42px;
   margin-right: 8px;
-  color: #54565f;
+  color: var(--code-mute);
   text-align: right;
   font-size: 12px;
   user-select: none;
@@ -1058,7 +1086,7 @@ body.show-refs .ref-badge {
 
 .diagram-item {
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -1084,7 +1112,7 @@ body.show-refs .ref-badge {
 .flow-wrap {
   padding: 24px 14px;
   background: var(--bg-soft);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow-x: auto;
 }
 
@@ -1107,7 +1135,7 @@ body.show-refs .ref-badge {
    ============================================================ */
 .control-panel {
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--panel);
 }
@@ -1227,7 +1255,7 @@ body.show-refs .ref-badge {
 .block-export {
   padding: 20px 22px;
   background: var(--bg-soft);
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .block-export p {
@@ -1244,7 +1272,7 @@ body.show-refs .ref-badge {
   border-color: var(--ink);
 }
 
-.block-export .copy-button:hover { background: #000; }
+.block-export .copy-button:hover { background: var(--accent-2); border-color: var(--accent-2); }
 
 /* ============================================================
    BLOCK: relations
@@ -1261,7 +1289,7 @@ body.show-refs .ref-badge {
   padding: 14px 18px;
   background: var(--panel);
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: 12px;
   flex-wrap: wrap;
 }
 
